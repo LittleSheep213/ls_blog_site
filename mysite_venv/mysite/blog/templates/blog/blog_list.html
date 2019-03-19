@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{# 页面标题 #}
+{% block title %}我的网站{% endblock %}
+
+{# 选中状态 #}
+{% block nav_blog_active %}active{% endblock %}
+
+{# 添加css样式 #}
+{% load staticfiles %}
+{% block header_extends %}
+	<link rel="stylesheet" type="text/css" href="{% static 'blog/blog.css' %}">
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8 col-sm-8 col-md-8">
+				<div class="panel panel-info">
+				  <div class="panel-heading">{% block blog_list_title %}博客列表{% endblock %}</div>
+				  <div class="panel-body">
+				    {% for blog in page_of_blogs %}
+				    	<div class="blog">
+				    		<h3 style="font-size:36px">
+				    			<a href="{% url 'blog_detail' blog.pk %}">
+									{{ blog.title }}
+								</a>
+				    		</h3>
+				    		<p class="blog-info">
+				    			<span class="glyphicon glyphicon-tag" aria-hidden="true"></span><a href="{% url 'blogs_with_type' blog.blog_type.pk %}">{{ blog.blog_type }}</a>&nbsp;&nbsp;
+				    			<span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ blog.created_time|date:"Y-m-d"}}&nbsp;&nbsp;
+				    			<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>浏览量:{{ blog.read_num}}
+				    		</p><br>
+							<p>{{ blog.content|striptags|truncatechars:120 }}</p>
+				    	</div>						
+						{% empty %}
+							<div class="class">
+								<h3>--暂无博客，敬请期待--</h3>
+							</div>
+						
+					{% endfor %}
+					
+				  </div>
+				</div>
+				<div class="paginator">
+					
+					<nav aria-label="Page navigation">
+					  <ul class="pagination">
+					  	{# 上一页 #}
+					    <li>
+					    	{% if page_of_blogs.has_previous %}
+						    	<a href="?page={{ page_of_blogs.previous_page_number }}" aria-label="Previous">
+						        	<span aria-hidden="true">&laquo;</span>
+						      	</a>
+					    	{% else %}
+					    		<span aria-hidden="true">&laquo;</span>
+					    	{% endif %}
+					     
+					    </li>
+
+					    {# 全部页码 #} 
+					    {% for page_num in page_range %}
+				    		{% if page_num == page_of_blogs.number %}
+								<li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+				    		{% else %}
+				    			{% if page_num == "…" %}
+				    			<li><a>{{ page_num }}</a></li>
+				    			{% else %}
+				    				<li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+				    			{% endif %}
+			    			{% endif %}
+						{% endfor %}
+
+						{# 下一页 #}
+					    <li>
+					    	{% if page_of_blogs.has_next %}
+						    	<a href="?page={{ page_of_blogs.next_page_number }}" aria-label="Next">
+					        		<span aria-hidden="true">&raquo;</span>
+					      		</a>
+					    	{% else %}
+					    		<span aria-hidden="true">&raquo;</span>
+					    	{% endif %}
+					      
+					    </li>
+					  </ul>
+					  <p style="font-size: 18px">共{{ page_of_blogs.paginator.count }}篇博客，当前第{{ page_of_blogs.number }}页，共{{ page_of_blogs.paginator.num_pages }}页</p>
+					</nav>
+
+				</div>
+			</div>
+			<div class="hidden-xs col-sm-4 col-md-4">
+				<div class="panel panel-warning">
+				  <div class="panel-heading">博客分类</div>
+				  <div class="panel-body">
+				    <ul class="blog-types">
+						{% for blog_type in blog_types %}
+							<li>
+								<a style="font-size:16px" href="{% url 'blogs_with_type' blog_type.pk %}"class="btn btn-warning" title="博客有{{blog_type.blog_set.count}}篇">
+									{{ blog_type.type_name }}
+								</a>
+							</li>
+							<br>
+						{% empty %}
+							<li>
+								暂无分类
+							</li>
+						{% endfor %}
+					</ul>
+				  </div>
+				</div>	
+				<div class="panel panel-success">
+				  <div class="panel-heading">日期</div>
+				  <div class="panel-body">
+				    <ul class="blog-dates">
+						{% for blog_date, blog_count in blognum_of_date_list.items %}
+							<li>
+								<a style="font-size:16px" href="{% url 'blogs_with_date' blog_date.year blog_date.month %}"class="btn btn-success" title="博客有{{blog_count}}篇">
+									{{ blog_date|date:"Y年m月" }}
+								</a>
+							</li>
+							<br>
+						{% empty %}
+							<li>
+								暂无分类
+							</li>
+						{% endfor %}
+					</ul>
+				  </div>
+				</div>			
+			</div>
+		</div>
+	</div>
+{% endblock %}

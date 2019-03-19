@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{# 页面标题 #}
+{% block title %}
+	我的网站|注册
+{% endblock %}
+
+{% block header_extends %}
+{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'mycss/log_reg.css' %}">
+{% endblock %}
+
+{% block nav_home_active %}active{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+	<div class="container">
+		<div class="col-xs-4 col-xs-offset-4">
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">register screen</h3>
+			  </div>
+			  <div class="panel-body">
+			    <form action="" method="POST">
+					{% csrf_token %}
+					{% for field in reg_form %}
+						<label for='{{ field.id_for_label }}'>{{ field.label }}</label>
+						{{ field }}
+						<p class="text-danger">{{ field.errors.as_text }}</p>
+					{% endfor %}
+					<span class="pull-left text-danger" style="font-size: 16px">{{ reg_form.non_field_errors }}</span>
+					<input type="submit" value="register" class="btn btn-primary pull-right">
+				</form>	
+			  </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

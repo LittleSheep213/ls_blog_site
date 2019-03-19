@@ -1,0 +1,8 @@
+@charset "utf-8";
+/*设置欢迎语的字体、位置等等*/
+ul {
+	list-style-type: none;
+}
+label {
+	font-size: 16px;
+}

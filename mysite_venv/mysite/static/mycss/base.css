@@ -1,0 +1,15 @@
+@charset "utf-8";
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	margin-top: 70px!important;  /*强制，因为页面可能已经设置了一个值*/
+}
+a:link{text-decoration:none;} /*指正常的未被访问过的链接*/
+ 
+a:visited{text-decoration:none;} /*指已经访问过的链接*/
+ 
+a:hover{text-decoration:none;} /*指鼠标在链接*/
+ 
+a:active{text-decoration:none;} /*指正在点的链接*/
